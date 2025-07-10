@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Финансы - Микросервис для учета финансов</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/flowbite@2.3.0/dist/flowbite.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelector("form").addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const amount = parseFloat(document.getElementById("price").value);
+                const category = document.getElementById("category").value;
+                const selectedDate = document.getElementById("dayPicker").value;
+
+                if (isNaN(amount) || !category) {
+                    alert("Пожалуйста, заполните стоимость и категорию.");
+                    return;
+                }
+
+                let created_at;
+                if (selectedDate) {
+                    const now = new Date();
+                    const hours = now.getHours().toString().padStart(2, '0');
+                    const minutes = now.getMinutes().toString().padStart(2, '0');
+                    const seconds = now.getSeconds().toString().padStart(2, '0');
+                    created_at = `${selectedDate}T${hours}:${minutes}:${seconds}`;
+                } else {
+                    created_at = new Date().toISOString();
+                }
+
+                const response = await fetch("/api/add", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        amount,
+                        category,
+                        created_at                    })
+                });
+
+                if (response.ok) {
+                    alert("Затрата добавлена!");
+                    window.location.href = "/";
+                } else {
+                    const text = await response.text();
+                    alert("Ошибка при добавлении: " + text);
+                }
+            });
+        });
+
+    </script>
+
+
+
+
+    <link rel="stylesheet" href="https://unpkg.com/flowbite@2.3.0/dist/flowbite.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .font-inter-bold {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+        }
+        .font-inter-medium {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+        .font-inter-semibold {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+
+<body class="bg-[#141414] box-border content-stretch flex flex-col items-start justify-start p-0 relative size-full min-h-screen">
+    
+    <!-- Header -->
+    <div class="relative shrink-0 w-full">
+        <div class="relative size-full">
+            <div class="box-border content-stretch flex flex-col gap-8 items-start justify-start pb-0 pt-8 px-16 relative w-full">
+                
+                <!-- Container with title and dropdown -->
+                <div class="[flex-flow:wrap] box-border content-start flex gap-0 items-start justify-start p-0 relative shrink-0 w-full">
+                    
+                    <!-- Title section -->
+                    <div class="basis-0 box-border content-stretch flex flex-col gap-2 grow items-start justify-center leading-[0] min-h-px min-w-px not-italic p-0 relative shrink-0 text-left">
+                        <div class="font-inter-bold relative shrink-0 text-[#ffffff] text-[30px] w-full">
+                            <p class="block leading-[42px]">Финансы</p>
+                        </div>
+                        <div class="font-inter-medium relative shrink-0 text-[18px] text-[rgba(255,255,255,0.5)] w-full">
+                            <p class="block leading-[1.1]">Микросервис для учета финансов</p>
+                        </div>
+                    </div>
+                    
+
+                
+                <!-- Divider -->
+                <div class="absolute bg-[#434343] bottom-0 h-px left-0 right-0"></div>
+                
+                <!-- Tabs -->
+                <div class="box-border content-stretch flex flex-row gap-2.5 items-center justify-start p-0 relative rounded-lg shrink-0 w-full">
+                    <ul class="flex flex-wrap -mb-px">
+                        <li class="me-2">
+                            <a href="http://127.0.0.1:8000/" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg text-gray-500 hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300">Затраты</a>
+                        </li>
+                        <li class="me-2">
+                            <a href="http://127.0.0.1:8000/statistics" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg text-gray-500 hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300" aria-current="page">Статистика</a>
+                        </li>
+                        <li class="me-2">
+                            <a href="http://127.0.0.1:8000/add" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg active text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500">Добавить</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Body (content area) -->
+    <div class="h-[1157px] shrink-0 w-fullbox-border content-stretch flex flex-col gap-8 items-start justify-start pb-8 pt-8 px-16 relative w-full">
+
+  
+
+      <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Добавить затрату</h2>
+      <form action="#">
+          <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+
+              <div class="w-full">
+                  <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Стоимость
+                  <input type="number" name="price" id="price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="100" required="">
+              </div>
+              <div>
+                  <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Категория
+                  <select id="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                      <option selected="">Выбор категории
+                      <option value="Food">Пища</option>
+                      <option value="Transport">Транспорт</option>
+                      <option value="Housing">Жильё</option>
+                      <option value="Internet">Интернет</option>
+                      <option value="Health">Здоровье</option>
+                      <option value="Entertainment">Развлечения</option>
+                      <option value="Other">Другое</option>
+                  </select>
+              </div>
+
+              <div class="sm:col-span-2">
+                <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Не сейчас?
+                <div class="relative max-w-sm">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                </svg>
+            </div>
+            <input data-datepicker id="dayPicker" type="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date">
+            </div>
+                </div>
+          </div>
+          <button type="submit" class="bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+              Добавить затрату
+          </button>
+      </form>
+
+
+
+
+    </div>
+    
+    <!-- Footer -->
+    <div class="relative shrink-0 w-full">
+        <div class="overflow-clip relative size-full">
+            <div class="box-border content-stretch flex flex-col gap-8 items-start justify-start pb-8 pt-0 px-16 relative w-full">
+                <!-- Divider -->
+                <div class="bg-[rgba(26,26,26,0.2)] h-px shrink-0 w-full"></div>
+                
+                <!-- Footer content -->
+                <div class="box-border content-stretch flex flex-row items-center justify-between pb-0 pt-4 px-0 relative shrink-0 w-full">
+                    <!-- Logo and email -->
+                    <div class="box-border content-stretch flex flex-row gap-2 items-center justify-start p-0 relative shrink-0">
+                        <!-- Icon -->
+                        <div class="relative shrink-0 size-8">
+                            <svg class="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 32 32">
+                                <path clip-rule="evenodd" d="M2.66667 9C2.66667 6.23858 4.90524 4 7.66667 4H24.3333C27.0948 4 29.3333 6.23858 29.3333 9V20.3333C29.3333 23.0948 27.0948 25.3333 24.3333 25.3333H20.5012C20.4236 25.3333 20.3484 25.3604 20.2886 25.41L17.4908 27.7278C16.6235 28.4465 15.3665 28.4428 14.5033 27.7192L11.7499 25.4112C11.6899 25.3609 11.6141 25.3333 11.5358 25.3333H7.66667C4.90524 25.3333 2.66667 23.0948 2.66667 20.3333V9ZM8.66667 14.6667C8.66667 15.403 9.26362 16 10 16C10.7364 16 11.3333 15.403 11.3333 14.6667C11.3333 13.9303 10.7364 13.3333 10 13.3333C9.26362 13.3333 8.66667 13.9303 8.66667 14.6667ZM14.6667 14.6667C14.6667 15.403 15.2636 16 16 16C16.7364 16 17.3333 15.403 17.3333 14.6667C17.3333 13.9303 16.7364 13.3333 16 13.3333C15.2636 13.3333 14.6667 13.9303 14.6667 14.6667ZM22 16C21.2636 16 20.6667 15.403 20.6667 14.6667C20.6667 13.9303 21.2636 13.3333 22 13.3333C22.7364 13.3333 23.3333 13.9303 23.3333 14.6667C23.3333 15.403 22.7364 16 22 16Z" fill="white" fill-opacity="0.4" fill-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <!-- Email link -->
+                        <a class="block font-inter-medium leading-[0] not-italic relative shrink-0 text-[16px] text-[rgba(255,255,255,0.4)] text-left text-nowrap underline" href="mailto:andrei.murashko@proton.me">
+                            <p class="block cursor-pointer leading-[24px] whitespace-pre">andrei.murashko@proton.me</p>
+                        </a>
+                    </div>
+                    
+                    <!-- Copyright -->
+                    <div class="font-inter-medium leading-[0] not-italic relative shrink-0 text-[16px] text-[rgba(255,255,255,0.4)] text-left text-nowrap">
+                        <p class="block leading-[24px] whitespace-pre">2025 Pet Project</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

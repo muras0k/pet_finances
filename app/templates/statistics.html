@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Финансы - Микросервис для учета финансов</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/flowbite@2.3.0/dist/flowbite.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+        fetch("/api/distribution")
+            .then(response => response.json())
+            .then(data => {
+                const categories = ["transport", "housing", "health", "food", "entertainment", "internet", "other"];
+                categories.forEach(cat => {
+                const value = Number(data[cat]) || 0;
+                const bar = document.getElementById(`bar-${cat}`);
+                const label = document.getElementById(`label-${cat}`); // after page loaded fetch data about percentage
+                if (bar && label) {
+                    bar.style.width = `${value}%`;
+                    label.textContent = `${value.toFixed(1)}%`;
+                }
+                });
+            });
+        });
+    </script>
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .font-inter-bold {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+        }
+        .font-inter-medium {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+        .font-inter-semibold {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+
+<body class="bg-[#141414] box-border content-stretch flex flex-col items-start justify-start p-0 relative size-full min-h-screen">
+    
+    <!-- Header -->
+    <div class="relative shrink-0 w-full">
+        <div class="relative size-full">
+            <div class="box-border content-stretch flex flex-col gap-8 items-start justify-start pb-0 pt-8 px-16 relative w-full">
+                
+                <!-- Container with title and dropdown -->
+                <div class="[flex-flow:wrap] box-border content-start flex gap-0 items-start justify-start p-0 relative shrink-0 w-full">
+                    
+                    <!-- Title section -->
+                    <div class="basis-0 box-border content-stretch flex flex-col gap-2 grow items-start justify-center leading-[0] min-h-px min-w-px not-italic p-0 relative shrink-0 text-left">
+                        <div class="font-inter-bold relative shrink-0 text-[#ffffff] text-[30px] w-full">
+                            <p class="block leading-[42px]">Финансы</p>
+                        </div>
+                        <div class="font-inter-medium relative shrink-0 text-[18px] text-[rgba(255,255,255,0.5)] w-full">
+                            <p class="block leading-[1.1]">Микросервис для учета финансов</p>
+                        </div>
+                    </div>
+                    
+
+                <!-- Divider -->
+                <div class="absolute bg-[#434343] bottom-0 h-px left-0 right-0"></div>
+                
+                <!-- Tabs -->
+                <div class="box-border content-stretch flex flex-row gap-2.5 items-center justify-start p-0 relative rounded-lg shrink-0 w-full">
+                    <ul class="flex flex-wrap -mb-px">
+                        <li class="me-2">
+                            <a href="http://127.0.0.1:8000/" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg text-gray-500 hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300">Затраты</a>
+                        </li>
+                        <li class="me-2">
+                            <a href="http://127.0.0.1:8000/statistics" class="inline-block p-4 border-b-2 rounded-t-lg active text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500" aria-current="page">Статистика</a>
+                        </li>
+                        <li class="me-2">
+                            <a href="http://127.0.0.1:8000/add" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg text-gray-500 hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300">Добавить</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Body (content area) -->
+    <div class="h-[1000px] shrink-0 w-fullbox-border content-stretch flex flex-col gap-8 items-start justify-start pb-8 pt-8 px-16 relative w-full">
+
+
+        <div class="mb-1 text-base font-medium dark:text-white">
+            Транспорт: <span id="label-transport">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+            <div class="bg-gray-600 h-2.5 rounded-full dark:bg-gray-300 transition-all duration-500" style="width: 0%" id="bar-transport"></div>
+        </div>
+        <div class="mb-1 text-base font-medium text-blue-700 dark:text-blue-500">
+            Жильё: <span id="label-housing">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+            <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"id="bar-housing"></div>
+        </div>
+        <div class="mb-1 text-base font-medium text-red-700 dark:text-red-500">
+            Здоровье: <span id="label-health">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+            <div class="bg-red-600 h-2.5 rounded-full dark:bg-red-500 transition-all duration-500" style="width: 0%" id="bar-health"></div>
+        </div>
+        <div class="mb-1 text-base font-medium text-green-700 dark:text-green-500">
+            Продукты: <span id="label-food">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+            <div class="bg-green-600 h-2.5 rounded-full dark:bg-green-500 transition-all duration-500" style="width: 0%" id="bar-food"></div>
+        </div>
+        <div class="mb-1 text-base font-medium text-yellow-700 dark:text-yellow-500">
+            Развлечения: <span id="label-entertainment">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+            <div class="bg-yellow-400 h-2.5 rounded-full transition-all duration-500" style="width: 0%" id="bar-entertainment"></div>
+        </div>
+        <div class="mb-1 text-base font-medium text-indigo-700 dark:text-indigo-500">
+            Интернет: <span id="label-internet">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+        <div class="bg-indigo-600 h-2.5 rounded-full dark:bg-indigo-500 transition-all duration-500" style="width: 0%" id="bar-internet"></div>
+        </div>
+        <div class="mb-1 text-base font-medium text-purple-700 dark:text-purple-500">
+            Другое: <span id="label-other">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+            <div class="bg-purple-600 h-2.5 rounded-full dark:bg-purple-500 transition-all duration-500" style="width: 0%" id="bar-other"></div>
+        </div>
+
+
+    </div>
+    
+
+    <footer>
+    <!-- Footer -->
+    <div class="relative shrink-0 w-full">
+        <div class="overflow-clip relative size-full">
+            <div class="box-border content-stretch flex flex-col gap-8 items-start justify-start pb-8 pt-0 px-16 relative w-full">
+                <!-- Divider -->
+                <div class="bg-[rgba(26,26,26,0.2)] h-px shrink-0 w-full"></div>
+                
+                <!-- Footer content -->
+                <div class="box-border content-stretch flex flex-row items-center justify-between pb-0 pt-4 px-0 relative shrink-0 w-full">
+                    <!-- Logo and email -->
+                    <div class="box-border content-stretch flex flex-row gap-2 items-center justify-start p-0 relative shrink-0">
+                        <!-- Icon -->
+                        <div class="relative shrink-0 size-8">
+                            <svg class="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 32 32">
+                                <path clip-rule="evenodd" d="M2.66667 9C2.66667 6.23858 4.90524 4 7.66667 4H24.3333C27.0948 4 29.3333 6.23858 29.3333 9V20.3333C29.3333 23.0948 27.0948 25.3333 24.3333 25.3333H20.5012C20.4236 25.3333 20.3484 25.3604 20.2886 25.41L17.4908 27.7278C16.6235 28.4465 15.3665 28.4428 14.5033 27.7192L11.7499 25.4112C11.6899 25.3609 11.6141 25.3333 11.5358 25.3333H7.66667C4.90524 25.3333 2.66667 23.0948 2.66667 20.3333V9ZM8.66667 14.6667C8.66667 15.403 9.26362 16 10 16C10.7364 16 11.3333 15.403 11.3333 14.6667C11.3333 13.9303 10.7364 13.3333 10 13.3333C9.26362 13.3333 8.66667 13.9303 8.66667 14.6667ZM14.6667 14.6667C14.6667 15.403 15.2636 16 16 16C16.7364 16 17.3333 15.403 17.3333 14.6667C17.3333 13.9303 16.7364 13.3333 16 13.3333C15.2636 13.3333 14.6667 13.9303 14.6667 14.6667ZM22 16C21.2636 16 20.6667 15.403 20.6667 14.6667C20.6667 13.9303 21.2636 13.3333 22 13.3333C22.7364 13.3333 23.3333 13.9303 23.3333 14.6667C23.3333 15.403 22.7364 16 22 16Z" fill="white" fill-opacity="0.4" fill-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <!-- Email link -->
+                        <a class="block font-inter-medium leading-[0] not-italic relative shrink-0 text-[16px] text-[rgba(255,255,255,0.4)] text-left text-nowrap underline" href="mailto:andrei.murashko@proton.me">
+                            <p class="block cursor-pointer leading-[24px] whitespace-pre">andrei.murashko@proton.me</p>
+                        </a>
+                    </div>
+                    
+                    <!-- Copyright -->
+                    <div class="font-inter-medium leading-[0] not-italic relative shrink-0 text-[16px] text-[rgba(255,255,255,0.4)] text-left text-nowrap">
+                        <p class="block leading-[24px] whitespace-pre">2025 Pet Project</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </footer>
+</body>
+</html>
