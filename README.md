@@ -66,23 +66,6 @@ Visit in browser:
 
     http://localhost:8000/api/expenses — raw API
 
-  ### Project Structure
-
-  pet_finances/
-│
-├── app/
-│   ├── main.py
-│   ├── database.py
-│   ├── models.py
-│   ├── templates/
-│   │   ├── index.html
-│   │   ├── add.html
-│   │   └── statistics.html
-│   └── static/ (if used)
-│
-├── requirements.txt
-├── README.md
-└── .gitignore
 
 📧 Author
 
